@@ -1,2 +1,42 @@
-h1= title
-p Welcome to #{title}
+#main
+	#score_others
+		h2 Node.JS Championship
+		ul
+	#scoreboard
+		span#team1.name !!!
+		span#team2.name !!!
+		span.score
+			span#score1.name ?
+			| x
+			span#score2.name ?
+	.content
+		#content-left.module
+			h3 Rooster
+			#container-left.container
+		#content-right.module
+			h3 Rooster
+			#container-right.container
+		#content-center
+			h3 Narration
+			.container
+				ul#narration
+	#timeline
+		.teams
+			#tTeam1 ---
+			hr
+			#tTeam2 ---
+		.container
+			hr#tLine
+			table
+				thead
+					tr
+						- for( var i = 1; i < 51; i++ )
+							- if( i < 10 )
+								- i = '0' + i;
+							th #{i}
+
+			#line1
+			#line2
+		br(clear='all')
+
+ul#notify
