@@ -80,6 +80,9 @@ Game.prototype.start = function(){
 	// get the teams players
 	this.buildTeams();
 
+	// first message
+	this.status('start');
+
 	// time loop
 	this.timeout = setInterval(
 		this.tick.bind( this ), 1000 * 1
@@ -95,10 +98,15 @@ Game.prototype.finish = function(){
 	clearTimeout( this.timeout );
 
 	// last message
+	this.status('finish');
 
 	// log the event
 	console.log('Finishing game', this.id);
 };
+
+/**
+ * Main game event loop
+ */
 
 Game.prototype.tick = function(){
 	// check the time and finish the game
@@ -115,16 +123,16 @@ Game.prototype.tick = function(){
 	// update the game time
 	this.time++;
 
-	// in goal, update the score
-	if( action === 'default' ){
-		console.log( action.toUpperCase(), this.time, play );
-	} else {
+	// do the actions
+	if( action !== 'default' ){
 		this[ action ]({
 			time: this.time,
 			team: 1 + r(2),
 			play: play
 		});
 	}
+
+	console.log( action.toUpperCase(), this.time, play );
 };
 
 /**
@@ -134,6 +142,15 @@ Game.prototype.tick = function(){
 
 Game.prototype.getPlayType = function(){
 	return ['yellowcard','redcard','substitution','goal'][ r(10) ] || 'default';
+};
+
+/**
+ * Status action
+ * @param {String} type
+ */
+
+Game.prototype.status = function(type){
+	console.log( type.toUpperCase(), 'The game has '+ type +'ed!' );
 };
 
 /**
@@ -173,12 +190,3 @@ Game.prototype.goal = function(o){
  */
 
 game = new Game();
-
-/**
- * Finish the game on exit
- */
-
-process.on('exit', function () {
-	// finish the game
-	game.finish( true );
-});
