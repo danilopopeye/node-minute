@@ -3,6 +3,8 @@
  */
 
 var game,
+	mongoose = require('mongoose'),
+	models = require('./lib/models'),
 	faker = require('Faker');
 
 /**
@@ -23,62 +25,54 @@ function r(n){
  */
 
 function Game(){
-	// generate the game id
-	this._key();
+	// Match Model
+	this.match = new models.Matches();
 
-	// cache the game data
-	this.cache = {};
-
-	// kick off
-	this.start();
+	// get the teams players
+	this.buildTeams(
+		// kick off
+		this.start.bind( this )
+	);
 }
-
-/**
- * Generate a random id
- */
-
-Game.prototype._key = function(){
-	// get the random game id
-	this.id = Math.random().toString().substr(2);
-};
 
 /**
  * Build the teams and roosters
  */
 
-Game.prototype.buildTeams = function(){
+Game.prototype.buildTeams = function( cb ){
 	for( var t = 1; t < 3; t++ ){
-		this.cache[ t ] = {};
-		this.cache[ t ].score = 0;
-		this.cache[ t ].plays = [];
-		this.cache[ t ].roster = {};
-		this.cache[ t ].substitutes = {};
-		this.cache[ t ].name = faker.Company.companyName();
-		this.cache[ t ].acronym = this.cache[ t ].name.substr(-3).toUpperCase();
+		var team = new models.Teams();
 
-		for( var i = 1; i < 12; i++ ){
-			this.cache[ t ].roster[ i ] = faker.Name.findName();
+		// team info
+		team.name = faker.Company.companyName();
+		team.acronym = team.name.substr(-3).toUpperCase();
+
+		// build the players list
+		for( var i = 1; i < 18; i++ ){
+			team[( i < 12 ? 'rooster' : 'substitutes' )].push({
+				number: i, name: faker.Name.findName()
+			});
 		}
 
-		for( var j = 12; j < 18; j++ ){
-			this.cache[ t ].substitutes[ j ] = faker.Name.findName();
-		}
+		// add the team
+		this.match.teams.push( team );
 	}
+
+	// save the teams
+	this.match.save(cb);
 };
 
 /**
  * Start the game
  */
 
-Game.prototype.start = function(){
+Game.prototype.start = function( err ){
+	if( err !== null ){
+		throw new Error( err );
+	}
+
 	// log the game id
-	console.log('Starting game: ', this.id);
-
-	// save the last time
-	this.time = 0;
-
-	// get the teams players
-	this.buildTeams();
+	console.log('Starting game: ', this.match._id);
 
 	// first message
 	this.status('start');
