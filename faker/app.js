@@ -103,30 +103,39 @@ Game.prototype.finish = function(){
  */
 
 Game.prototype.tick = function(){
+	var time = parseInt( this.match.time, 10 );
+
 	// check the time and finish the game
-	if( this.time === ( 45 + r(5) ) || this.time === 50 ){
+	if( time === ( 45 + r(5) ) || time === 50 ){
 		return this.finish();
 	}
 
-	var
-		// get the action
-		action = this.getPlayType(),
-		// play description
-		play = faker.Lorem.sentence();
+	var action, play = new models.Plays();
+
+	// get the action type
+	action = play.type = this.getPlayType();
+
+	// play model
+	play.text = faker.Lorem.sentence();
 
 	// update the game time
-	this.time++;
+	play.time = ++this.match.time;
 
 	// do the actions
 	if( action !== 'default' ){
 		this[ action ]({
-			time: this.time,
 			team: 1 + r(2),
 			play: play
 		});
 	}
 
-	console.log( action.toUpperCase(), this.time, play );
+	// add the play
+	this.match.plays.push( play );
+
+	// save the match
+	this.match.save(function( err ){
+		console.log( action.toUpperCase(), game.match.time, play.text );
+	});
 };
 
 /**
