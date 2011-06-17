@@ -135,20 +135,23 @@ Game.prototype.tick = function(){
 	// update the game time
 	play.time = ++this.match.time;
 
-	// do the actions
+	// on some actions
 	if( action !== 'default' ){
-		play = this[ action ]({
-			team: 1 + r(2),
-			play: play
-		});
+		// select the affected team
+		play.team = r(2);
+
+		// do the actions
+		play = this[ action ]( play );
 	}
 
 	// add the play
 	this.match.plays.push( play );
 
 	// save the match
-	this.match.save(function( err ){
-		console.log( action.toUpperCase(), game.match.time, play.text );
+	this.match.save(function( err, match ){
+		console.log(
+			action.toUpperCase(), match.time, play.text
+		);
 	});
 };
 
@@ -172,42 +175,51 @@ Game.prototype.status = function(type){
 
 /**
  * Yellowcard
- * @param {Object} time, team, play
+ * @param {Object} play model
  */
 
-Game.prototype.yellowcard = function(o){
-	return o.play;
+Game.prototype.yellowcard = function( play ){
+	return play;
 };
 
 /**
  * Redcard
- * @param {Object} time, team, play
+ * @param {Object} play model
  */
 
-Game.prototype.redcard = function(o){
-	return o.play;
+Game.prototype.redcard = function( play ){
+	return play;
 };
 
 /**
  * Substitution
- * @param {Object} time, team, play
+ * @param {Object} play model
  */
 
-Game.prototype.substitution = function(o){
-	return o.play;
+Game.prototype.substitution = function( play ){
+	return play;
 };
 
 /**
  * Goal
- * @param {Object} team, play
+ * @param {Object} play model
  * @return {Object} play
  */
 
-Game.prototype.goal = function(o){
-	// update the score
-	this.match.teams[ o.team - 1 ].score++;
+Game.prototype.goal = function( play ){
+	var team = this.match.teams[ play.team ],
+		player = team.rooster[ r(team.rooster.length) ];
 
-	return o.play;
+	// team score
+	team.score++;
+
+	// player goal count
+	player.goal++;
+
+	// save the game author
+	play.players = player._id;
+
+	return play;
 };
 
 /**

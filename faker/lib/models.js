@@ -20,7 +20,8 @@ mongoose.connect('mongodb://localhost/minute');
 
 Player = new Schema({
 	number: Number,
-	name: String
+	name: String,
+	goal: { type: Number, default: 0 },
 });
 
 /**
@@ -42,7 +43,9 @@ Team = new Schema({
 Play = new Schema({
 	time: Number,
 	type: String,
-	text: String
+	text: String,
+	team: Number,
+	players: String
 });
 
 /**
