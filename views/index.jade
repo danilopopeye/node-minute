@@ -1,0 +1,8 @@
+h1= title
+
+ul
+	- each doc in docs
+			li
+				span= doc.home.name
+				|  #{doc.home.score} x #{doc.away.score}
+				span= doc.away.name

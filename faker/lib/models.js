@@ -55,6 +55,14 @@ Match = new Schema({
 	teams: [ Team ]
 });
 
+Match.virtual('home').get(function(){
+	return this.teams[0];
+});
+
+Match.virtual('away').get(function(){
+	return this.teams[0];
+});
+
 /**
  * Exports all models
  */
