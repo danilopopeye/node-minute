@@ -61,7 +61,7 @@ Match.virtual('home').get(function(){
 });
 
 Match.virtual('away').get(function(){
-	return this.teams[0];
+	return this.teams[1];
 });
 
 /**
