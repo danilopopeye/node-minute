@@ -33,11 +33,14 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res){
-	M.Matches.find({}, function(err, all){
-		res.render('index', {
-			title: 'Matches list', locals: {
-				docs: all
-			}
+	// TODO: 2 find() or find() and map() ?
+	M.Matches.find({ active: true }, function(err, actives){
+		M.Matches.find({ active: false }, function(err, inactives){
+			res.render('index', {
+				title: 'Matches list', locals: {
+					active: actives, inactive: inactives
+				}
+			});
 		});
 	});
 });
