@@ -51,6 +51,7 @@ Play = new Schema({
 
 Match = new Schema({
 	time: { type: Number, default: 0 },
+	active: { type: Boolean, default: false },
 	plays: [ Play ],
 	teams: [ Team ]
 });

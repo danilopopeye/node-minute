@@ -28,6 +28,9 @@ function Game(){
 	// Match Model
 	this.match = new models.Matches();
 
+	// make game active
+	this.match.active = true;
+
 	// get the teams players
 	this.buildTeams(
 		// kick off
@@ -88,14 +91,25 @@ Game.prototype.start = function( err ){
  */
 
 Game.prototype.finish = function(){
+	var self = this;
+
 	// clear the event loop
 	clearTimeout( this.timeout );
 
-	// last message
-	this.status('finish');
+	// make inactive
+	this.match.active = false;
 
-	// log the event
-	console.log('Finishing game', this.id);
+	// save it
+	this.match.save(function(){
+		// last message
+		self.status('finish');
+
+		// log the event
+		console.log('Finishing game', self.id);
+
+		// exit
+		process.exit(0);
+	});
 };
 
 /**
