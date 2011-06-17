@@ -137,7 +137,7 @@ Game.prototype.tick = function(){
 
 	// do the actions
 	if( action !== 'default' ){
-		this[ action ]({
+		play = this[ action ]({
 			team: 1 + r(2),
 			play: play
 		});
@@ -176,6 +176,7 @@ Game.prototype.status = function(type){
  */
 
 Game.prototype.yellowcard = function(o){
+	return o.play;
 };
 
 /**
@@ -184,6 +185,7 @@ Game.prototype.yellowcard = function(o){
  */
 
 Game.prototype.redcard = function(o){
+	return o.play;
 };
 
 /**
@@ -192,14 +194,20 @@ Game.prototype.redcard = function(o){
  */
 
 Game.prototype.substitution = function(o){
+	return o.play;
 };
 
 /**
  * Goal
- * @param {Object} time, team, play
+ * @param {Object} team, play
+ * @return {Object} play
  */
 
 Game.prototype.goal = function(o){
+	// update the score
+	this.match.teams[ o.team - 1 ].score++;
+
+	return o.play;
 };
 
 /**
