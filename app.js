@@ -61,8 +61,12 @@ app.param('matchId', function(req, res, next, id){
 app.get('/:matchId', function(req, res, next){
 	var match = req.match, teams = {};
 
-	teams[ match.home._id ] = 'left';
-	teams[ match.away._id ] = 'right';
+	teams[ match.home._id ] = {
+		klass: 'left', index: 1
+	};
+	teams[ match.away._id ] = {
+		klass: 'right', index: 2
+	};
 
 	res.render('game', {
 		title: match.name, locals: {
