@@ -1,4 +1,5 @@
 li
-	span= match.home.name
-	|  #{match.home.score} x #{match.away.score}
-	span= match.away.name
+	a(href='/'+match._id)
+		acronym(title=match.home.name)= match.home.acronym
+		|  #{match.home.score} x #{match.away.score}
+		acronym(title=match.away.name)= match.away.acronym
