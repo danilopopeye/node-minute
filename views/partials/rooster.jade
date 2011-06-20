@@ -1,0 +1,13 @@
+tr
+	td.number= player.number
+	td= player.name
+
+	td
+		- if( player.goal > 0 )
+			img(src='images/goal.png',title='Goal')
+
+	td
+		- if( player.cards.red )
+				img(src='images/redcard.png',title='Red card')
+		- else if( player.cards.yellow > 0 )
+				img(src='images/yellowcard.png',title='Yellow card')

@@ -11,12 +11,8 @@
 			| &nbsp;x
 			span#score2= away.score
 	.content
-		#content-left.module
-			h3 Rooster
-			#container-left.container
-		#content-right.module
-			h3 Rooster
-			#container-right.container
+		!= partial('rooster', { collection: match.teams, as: 'team' })
+
 		#content-center
 			h3 Narration
 			.container
