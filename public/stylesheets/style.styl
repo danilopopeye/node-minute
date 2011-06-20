@@ -234,6 +234,9 @@ ul
 		float left
 		width 35px
 
+		div
+			font-weight bold
+
 	& .container
 		background-color #336633
 		position relative
@@ -262,19 +265,12 @@ ul
 
 	& img
 		position absolute
-		top 0
 
-	& #line1
-	& #line2
-		position absolute
-		height 16px
-		left 0
+		&.line1
+			top 13px
 
-	& #line1
-		top 13px
-
-	& #line2
-		top 37px
+		&.line2
+			top 37px
 
 	& .notify
 		position relative

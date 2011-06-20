@@ -25,7 +25,8 @@
 			hr
 			#tTeam2= away.acronym
 		.container
-			hr#tLine
+			- var left = ( plays[0].time * 18 )
+			hr#tLine(style='width:'+ left +'px')
 			table
 				thead
 					tr
@@ -34,8 +35,7 @@
 								- i = '0' + i;
 							th #{i}
 
-			#line1
-			#line2
+			!= partial('partials/timeline', { collection: plays, as: 'play', teams: teams })
 		br(clear='all')
 
 ul#notify
