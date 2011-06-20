@@ -1,0 +1,6 @@
+li
+	p= play.text
+	span.time= play.time
+	- if( play.type !== 'default' )
+		span(class=[ 'action', play.type, teams[ play.team ] ].join(' ') )
+			img(src='images/'+ play.type +'.png', alt='', title=play.type)

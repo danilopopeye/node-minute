@@ -16,6 +16,7 @@ app.configure(function(){
 	app.set('view engine', 'jade');
 	app.use(express.logger());
 	app.use(express.bodyParser());
+	app.use(express.favicon());
 	app.use(express.methodOverride());
 	app.use(require('stylus').middleware({ src: __dirname + '/public' }));
 	app.use(app.router);
@@ -42,6 +43,31 @@ app.get('/', function(req, res){
 				}
 			});
 		});
+	});
+});
+
+app.param('matchId', function(req, res, next, id){
+	M.Matches.findById(id, function(err, match){
+		if (err) return next(err);
+		if (!match) return next(new Error('failed to find match'));
+
+		// save the match model
+		req.match = match;
+
+		next();
+	});
+});
+
+app.get('/:matchId', function(req, res, next){
+	var match = req.match, teams = {};
+
+	teams[ match.home._id ] = 'left';
+	teams[ match.away._id ] = 'right';
+
+	res.render('game', {
+		title: match.name, locals: {
+			match: match, teams: teams
+		}
 	});
 });
 

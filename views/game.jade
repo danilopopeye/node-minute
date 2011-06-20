@@ -1,14 +1,15 @@
+- var home = match.home, away = match.away;
 #main
 	#score_others
 		h2 Node.JS Championship
 		ul
 	#scoreboard
-		span#team1.name !!!
-		span#team2.name !!!
+		span#team1.name= home.name
+		span#team2.name= away.name
 		span.score
-			span#score1 ?
+			span#score1= home.score
 			| &nbsp;x
-			span#score2 ?
+			span#score2= away.score
 	.content
 		#content-left.module
 			h3 Rooster
@@ -20,11 +21,13 @@
 			h3 Narration
 			.container
 				ul#narration
+					- var plays = match.plays.concat(); plays.reverse();
+					!= partial('partials/narration', { collection: plays, as: 'play', teams: teams })
 	#timeline
 		.teams
-			#tTeam1 ---
+			#tTeam1= home.acronym
 			hr
-			#tTeam2 ---
+			#tTeam2= away.acronym
 		.container
 			hr#tLine
 			table
