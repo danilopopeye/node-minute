@@ -186,6 +186,13 @@ Game.prototype.status = function(type){
  */
 
 Game.prototype.yellowcard = function( play ){
+	var player = play._team.rooster.id( play.player );
+
+	// second yellow add a red too
+	if( ++player.cards.yellow === 2 ){
+		play = this.redcard( play );
+	}
+
 	return play;
 };
 
@@ -195,6 +202,14 @@ Game.prototype.yellowcard = function( play ){
  */
 
 Game.prototype.redcard = function( play ){
+	var player = play._team.rooster.id( play.player ).remove();
+
+	// update the status
+	player.cards.red = true;
+
+	// move to substitutes
+	play._team.substitutes.push( player );
+
 	return play;
 };
 
