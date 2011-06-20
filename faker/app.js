@@ -82,7 +82,7 @@ Game.prototype.start = function( err ){
 
 	// time loop
 	this.timeout = setInterval(
-		this.tick.bind( this ), 1000 * 1
+		this.tick.bind( this ), 10
 	);
 };
 
@@ -138,7 +138,14 @@ Game.prototype.tick = function(){
 	// on some actions
 	if( action !== 'default' ){
 		// select the affected team
-		play.team = r(2);
+		play._team = this.match.teams[ r(2) ];
+		play.team = play._team._id;
+
+		// select the affected player
+		play.player = play._team.rooster[
+			// get a random player
+			r( play._team.rooster.length )
+		]._id;
 
 		// do the actions
 		play = this[ action ]( play );
@@ -207,17 +214,11 @@ Game.prototype.substitution = function( play ){
  */
 
 Game.prototype.goal = function( play ){
-	var team = this.match.teams[ play.team ],
-		player = team.rooster[ r(team.rooster.length) ];
-
 	// team score
-	team.score++;
+	play._team.score++;
 
 	// player goal count
-	player.goal++;
-
-	// save the game author
-	play.players = player._id;
+	play._team.rooster.id( play.player ).goal++;
 
 	return play;
 };

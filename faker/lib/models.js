@@ -22,6 +22,10 @@ Player = new Schema({
 	number: Number,
 	name: String,
 	goal: { type: Number, default: 0 },
+	cards: {
+		red: { type: Boolean, default: false },
+		yellow: { type: Number, default: 0 }
+	}
 });
 
 /**
@@ -44,8 +48,8 @@ Play = new Schema({
 	time: Number,
 	type: String,
 	text: String,
-	team: Number,
-	players: String
+	team: ObjectId,
+	player: String
 });
 
 /**
