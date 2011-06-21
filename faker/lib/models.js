@@ -71,6 +71,15 @@ Match.virtual('away').get(function(){
 	return this.teams[1];
 });
 
+Match.virtual('title').get(function(){
+	var h = this.teams[0], a = this.teams[1];
+
+	return [
+		// home ? x ? away
+		h.name, h.score, 'x', a.score, a.name
+	].join(' ');
+});
+
 /**
  * Exports all models
  */

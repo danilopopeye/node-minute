@@ -69,7 +69,7 @@ app.get('/:matchId', function(req, res, next){
 	};
 
 	res.render('game', {
-		title: match.name, locals: {
+		title: match.title, locals: {
 			match: match, teams: teams
 		}
 	});
