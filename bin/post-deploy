@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# install the dependencies
+if [ ! -d "node_modules" ]; then
+	npm install
+fi
+
+# create the log directory
+if [ ! -d "logs" ]; then
+	mkdir "logs"
+fi
+
+# stop the service
+forever stop app.js
+
+# start it again
+forever start -o logs/acess.log -e logs/error.log app.js
