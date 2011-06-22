@@ -124,7 +124,7 @@ Game.prototype.tick = function(){
 		return this.finish();
 	}
 
-	var action, play = new models.Plays();
+	var action, active, play = new models.Plays();
 
 	// get the action type
 	action = play.type = this.getPlayType();
@@ -141,11 +141,13 @@ Game.prototype.tick = function(){
 		play._team = this.match.teams[ r(2) ];
 		play.team = play._team._id;
 
-		// select the affected player
-		play.player = play._team.rooster[
-			// get a random player
-			r( play._team.rooster.length )
-		]._id;
+		// get not expelled players
+		active = play._team.rooster.filter(function(player){
+			return !player.cards.red;
+		});
+
+		// select the affected random player
+		play.player = active[ r( active.length ) ]._id;
 
 		// do the actions
 		play = this[ action ]( play );
@@ -202,13 +204,10 @@ Game.prototype.yellowcard = function( play ){
  */
 
 Game.prototype.redcard = function( play ){
-	var player = play._team.rooster.id( play.player ).remove();
+	play._team.rooster.id( play.player )
 
-	// update the status
-	player.cards.red = true;
-
-	// move to substitutes
-	play._team.substitutes.push( player );
+		// update the status
+		.cards.red = true;
 
 	return play;
 };
