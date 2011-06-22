@@ -48,7 +48,7 @@ Game.prototype.buildTeams = function( cb ){
 
 		// team info
 		team.name = faker.Company.companyName();
-		team.acronym = team.name.substr(-3).toUpperCase();
+		team.acronym = this.acronym( team.name );
 
 		// build the players list
 		for( var i = 1; i < 18; i++ ){
@@ -63,6 +63,20 @@ Game.prototype.buildTeams = function( cb ){
 
 	// save the teams
 	this.match.save(cb);
+};
+
+/**
+ * Generates a better acronym
+ * @param {String} name
+ * @return {String} acronym
+ */
+
+Game.prototype.acronym = function(name){
+	var acr = name.replace(/[^A-Z]/g,'');
+
+	return (
+		acr.length === 3 ? acr : name.substr(0, 3)
+	).toUpperCase();
 };
 
 /**
@@ -105,7 +119,7 @@ Game.prototype.finish = function(){
 		self.status('finish');
 
 		// log the event
-		console.log('Finishing game', self.id);
+		console.log('Finishing game', self.match.id);
 
 		// exit
 		process.exit(0);
