@@ -25,10 +25,12 @@ app.configure(function(){
 
 app.configure('development', function(){
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+	app.listen(3000);
 });
 
 app.configure('production', function(){
 	app.use(express.errorHandler());
+	app.listen(80);
 });
 
 // Routes
@@ -75,5 +77,4 @@ app.get('/:matchId', function(req, res, next){
 	});
 });
 
-app.listen(3000);
 console.log("Express server listening on port %d", app.address().port);
