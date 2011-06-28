@@ -39,6 +39,13 @@ app.configure('production', function(){
 	console.log('Production configuration loaded');
 });
 
+app.configure('dotcloud', function(){
+	app.use(express.errorHandler());
+	app.listen(8080);
+
+	console.log('DotCloud configuration loaded');
+});
+
 // Routes
 
 app.get('/test', function(req, res){
