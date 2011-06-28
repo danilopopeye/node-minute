@@ -7,7 +7,7 @@ var express = require('express');
 
 var app = module.exports = express.createServer();
 
-var M = require('./faker/lib/models');
+var M = require('./lib/models');
 
 // Configuration
 
@@ -40,6 +40,10 @@ app.configure('production', function(){
 });
 
 // Routes
+
+app.get('/test', function(req, res){
+	res.send('It works!');
+});
 
 app.get('/', function(req, res){
 	// TODO: 2 find() or find() and map() ?
