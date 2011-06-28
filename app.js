@@ -21,16 +21,22 @@ app.configure(function(){
 	app.use(require('stylus').middleware({ src: __dirname + '/public' }));
 	app.use(app.router);
 	app.use(express.static(__dirname + '/public'));
+
+	console.log('Global configuration loaded');
 });
 
 app.configure('development', function(){
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 	app.listen(3000);
+
+	console.log('Development configuration loaded');
 });
 
 app.configure('production', function(){
 	app.use(express.errorHandler());
 	app.listen(80);
+
+	console.log('Production configuration loaded');
 });
 
 // Routes
