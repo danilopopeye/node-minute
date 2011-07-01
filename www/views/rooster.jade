@@ -12,9 +12,9 @@ div(id='content-#{side}').module
 					th(width='1%')
 					th(align='left') Name
 					th(width='1%')
-						img(src='images/goal.png',title='Goals')
+						img(src='/images/goal.png',title='Goals')
 					th(width='1%')
-						img(src='images/cards.png',title='Cards')
+						img(src='/images/cards.png',title='Cards')
 
 			tbody#rooster
 				!= partial('partials/rooster', { collection: team.rooster, as: 'player' })
