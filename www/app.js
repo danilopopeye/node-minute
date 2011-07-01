@@ -7,6 +7,7 @@ var
 	express = require('express'),
 	app = express.createServer(),
 	mongoose = require('mongoose'),
+	spawn = require('child_process').spawn,
 
 /**
  * Mongoose models
@@ -69,6 +70,25 @@ app.get('/', function(req, res){
 	});
 });
 
+app.get('/new', function(req, res, next){
+	var
+		// fork the game process
+		faker = spawn( process.execPath, [ __dirname + '/lib/faker.js' ], {
+			env: { mongo: app.set('mongo') || '' }
+		}),
+
+		// fallback timeout
+		t = setTimeout(function(res){
+			res.redirect('/');
+		}, 3000, res);
+
+	// first echo is the match id
+	faker.stdout.once('data',function(data){
+		res.redirect( '/match/' + data.toString() );
+		clearTimeout( t );
+	});
+});
+
 app.param('matchId', function(req, res, next, id){
 	M.Match.findById(id, function(err, match){
 		if (err) return next(err);
@@ -81,7 +101,7 @@ app.param('matchId', function(req, res, next, id){
 	});
 });
 
-app.get('/:matchId', function(req, res, next){
+app.get('/match/:matchId', function(req, res, next){
 	var match = req.match, teams = {};
 
 	teams[ match.home._id ] = {

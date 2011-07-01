@@ -22,7 +22,7 @@
 			hr
 			#tTeam2= away.acronym
 		.container
-			- var left = ( plays[0].time * 18 )
+			- var left = plays.length ? plays[0].time * 18 : 0
 			hr#tLine(style='width:'+ left +'px')
 			table
 				thead
