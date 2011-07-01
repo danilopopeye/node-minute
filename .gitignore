@@ -1,4 +1,4 @@
 node_modules/*
 logs/*
 pids/*
-public/stylesheets/*.css
+www/public/stylesheets/*.css
