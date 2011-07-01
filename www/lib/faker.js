@@ -2,9 +2,9 @@
  * Module dependencies
  */
 
-var game,
+var
 	mongoose = require('mongoose'),
-	models = require('./lib/models'),
+	models = require('./models')(mongoose),
 	faker = require('Faker');
 
 /**
@@ -26,7 +26,7 @@ function r(n){
 
 function Game(){
 	// Match Model
-	this.match = new models.Matches();
+	this.match = new models.Match();
 
 	// make game active
 	this.match.active = true;
@@ -44,7 +44,7 @@ function Game(){
 
 Game.prototype.buildTeams = function( cb ){
 	for( var t = 1; t < 3; t++ ){
-		var team = new models.Teams();
+		var team = new models.Team();
 
 		// team info
 		team.name = faker.Company.companyName();
@@ -89,14 +89,14 @@ Game.prototype.start = function( err ){
 	}
 
 	// log the game id
-	console.log('Starting game: ', this.match._id);
+	console.log( this.match._id );
 
 	// first message
 	this.status('start');
 
 	// time loop
 	this.timeout = setInterval(
-		this.tick.bind( this ), 10
+		this.tick.bind( this ), 1000
 	);
 };
 
@@ -138,7 +138,7 @@ Game.prototype.tick = function(){
 		return this.finish();
 	}
 
-	var action, active, play = new models.Plays();
+	var action, active, play = new models.Play();
 
 	// get the action type
 	action = play.type = this.getPlayType();
@@ -252,7 +252,15 @@ Game.prototype.goal = function( play ){
 };
 
 /**
+ * Connect to mongodb
+ */
+
+mongoose.connect( process.env['mongo'] || 'mongodb:////' );
+
+/**
  * Initialize
  */
 
-game = new Game();
+mongoose.connection.on('open', function(){
+	new Game();
+});
