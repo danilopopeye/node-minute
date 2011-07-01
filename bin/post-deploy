@@ -11,7 +11,7 @@ if [ ! -d "logs" ]; then
 fi
 
 # stop the service
-forever stop app.js
+forever stop www/app.js
 
 # start it again
-NODE_ENV=$1 forever start -o logs/acess.log -e logs/error.log app.js
+NODE_ENV=$1 forever start -o logs/acess.log -e logs/error.log www/app.js
