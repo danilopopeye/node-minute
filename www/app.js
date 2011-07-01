@@ -3,11 +3,16 @@
  * Module dependencies.
  */
 
-var express = require('express');
+var
+	express = require('express'),
+	app = express.createServer(),
+	mongoose = require('mongoose'),
 
-var app = module.exports = express.createServer();
+/**
+ * Mongoose models
+ */
 
-var M = require('./lib/models');
+	M = require('./lib/models')(mongoose);
 
 // Configuration
 
@@ -27,35 +32,34 @@ app.configure(function(){
 
 app.configure('development', function(){
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-	app.listen(3000);
+	app.set('mongo','mongodb://localhost/minute');
+	app.set('port', 3000);
 
 	console.log('Development configuration loaded');
 });
 
 app.configure('production', function(){
 	app.use(express.errorHandler());
-	app.listen(80);
+	app.set('mongo','mongodb://localhost/minute');
+	app.set('port', 80);
 
 	console.log('Production configuration loaded');
 });
 
 app.configure('dotcloud', function(){
 	app.use(express.errorHandler());
-	app.listen(8080);
+	app.set('mongo','mongodb://localhost/minute');
+	app.set('port', 8080);
 
 	console.log('DotCloud configuration loaded');
 });
 
 // Routes
 
-app.get('/test', function(req, res){
-	res.send('It works!');
-});
-
 app.get('/', function(req, res){
 	// TODO: 2 find() or find() and map() ?
-	M.Matches.find({ active: true }, function(err, actives){
-		M.Matches.find({ active: false }, function(err, inactives){
+	M.Match.find({ active: true }, function(err, actives){
+		M.Match.find({ active: false }, function(err, inactives){
 			res.render('index', {
 				title: 'Matches list', locals: {
 					active: actives, inactive: inactives
@@ -66,7 +70,7 @@ app.get('/', function(req, res){
 });
 
 app.param('matchId', function(req, res, next, id){
-	M.Matches.findById(id, function(err, match){
+	M.Match.findById(id, function(err, match){
 		if (err) return next(err);
 		if (!match) return next(new Error('failed to find match'));
 
@@ -94,4 +98,15 @@ app.get('/:matchId', function(req, res, next){
 	});
 });
 
-console.log("Express server listening on port %d", app.address().port);
+/**
+ * Connect to database
+ */
+
+mongoose.connect( app.set('mongo') );
+
+// Wait for connection before bind
+mongoose.connection.on('open',function(){
+	app.listen( app.set('port') );
+
+	console.log("Express server listening on port %d", app.address().port);
+});

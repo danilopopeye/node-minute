@@ -9,12 +9,6 @@ var
 	ObjectId = Schema.ObjectId;
 
 /**
- * Connect to database
- */
-
-mongoose.connect('mongodb://localhost/minute');
-
-/**
  * Players
  */
 
@@ -84,7 +78,11 @@ Match.virtual('title').get(function(){
  * Exports all models
  */
 
-exports.Plays = mongoose.model('plays', Play);
-exports.Players = mongoose.model('players', Player);
-exports.Teams = mongoose.model('teams', Team);
-exports.Matches = mongoose.model('matches', Match);
+module.exports = function(mg){
+	return {
+		Play: mg.model('plays', Play),
+		Player: mg.model('players', Player),
+		Team: mg.model('teams', Team),
+		Match: mg.model('matches', Match)
+	};
+};
