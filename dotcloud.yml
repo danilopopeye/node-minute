@@ -1,2 +1,6 @@
 www:
+	type: nodejs
   approot: www
+
+db:
+	type: mongodb
