@@ -1,0 +1,20 @@
+{
+    "name": "minute",
+		"version": "0.0.1",
+		"homepage": "minuto.danilosousa.net",
+		"author": {
+			"name": "Danilo Sousa",
+			"email": "eu@danilosousa.net"
+		},
+		"repository": {
+			"type": "git",
+			"url": "git://github.com/danilopopeye/node-minute"
+		},
+		"dependencies": {
+			"express": ">= 2.x",
+			"jade": ">= 0.12",
+			"stylus": ">= 0.13",
+			"mongoose": ">= 1.4.x",
+			"Faker": ">= 0.1.x"
+    }
+}

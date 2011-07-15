@@ -1,0 +1,11 @@
+h1= title
+
+h2 Active games
+
+ul
+	!= partial('partials/games_list.jade', { collection: active, as: 'match' })
+
+h2 Games archive
+
+ul
+	!= partial('partials/games_list.jade', { collection: inactive, as: 'match' })

@@ -1,0 +1,24 @@
+- var side = firstInCollection ? 'left' : 'right'
+
+div(id='content-#{side}').module
+	h3
+		span.left Rooster
+		span.right Substitutes
+
+	div(id='container-#{side}').container
+		table
+			thead
+				tr
+					th(width='1%')
+					th(align='left') Name
+					th(width='1%')
+						img(src='/images/goal.png',title='Goals')
+					th(width='1%')
+						img(src='/images/cards.png',title='Cards')
+
+			tbody#rooster
+				!= partial('partials/rooster', { collection: team.rooster, as: 'player' })
+
+			tbody#substitutes(style='display:none;')
+				!= partial('partials/rooster', { collection: team.substitutes, as: 'player' })
+
