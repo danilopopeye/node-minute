@@ -1,13 +1,13 @@
 div(data-role='page')
 	div(data-role='header', data-theme='b')
-		h1 Node Minute
+		h2 Node Minute
 	div(data-role='content')
 
 		.content-primary
 			ul(data-role='listview', data-inset='true')
 				li
 					h3 Live games
-					p Games being played now
+					p Games being generated right now
 						ul(data-inset='true')
 							!= partial('partials/games_list.jade', { collection: active, as: 'match' })
 				li
@@ -19,5 +19,13 @@ div(data-role='page')
 		.content-secondary
 			div(data-role='collapsible', data-collapsed='true')
 				h3 Information
-					h4 Node Minute
-					p Lorem ipsum dolor sit amet.
+					h1 Node Minute
+					p
+						| This is a
+						a(href='https://github.com/danilopopeye/node-minute', rel='external', target='_blank') opensource
+						|  project I'm making to learn about
+						a(href='http://nodejs.org', rel='external', target='_blank') node.js
+						|  and some related new stuff.
+						| You should see a list of games running and archived, or you can start a
+						a(href='/new', rel='external') new one
+						| .
