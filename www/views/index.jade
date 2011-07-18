@@ -1,11 +1,23 @@
-h1= title
+div(data-role='page')
+	div(data-role='header', data-theme='b')
+		h1 Node Minute
+	div(data-role='content')
 
-h2 Active games
+		.content-primary
+			ul(data-role='listview', data-inset='true')
+				li
+					h3 Live games
+					p Games being played now
+						ul(data-inset='true')
+							!= partial('partials/games_list.jade', { collection: active, as: 'match' })
+				li
+					h3 Archived games
+					p For historical propouses
+						ul(data-inset='true')
+							!= partial('partials/games_list.jade', { collection: inactive, as: 'match' })
 
-ul
-	!= partial('partials/games_list.jade', { collection: active, as: 'match' })
-
-h2 Games archive
-
-ul
-	!= partial('partials/games_list.jade', { collection: inactive, as: 'match' })
+		.content-secondary
+			div(data-role='collapsible', data-collapsed='true')
+				h3 Information
+					h4 Node Minute
+					p Lorem ipsum dolor sit amet.
