@@ -8,16 +8,3 @@ html
 	body!= body
 		script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js')
 		script(type='text/javascript', src='/javascripts/jquery.mobile.js')
-
-		script
-			$(function(){
-				$(document).bind('pageshow', function(){
-					var body = $(document.body);
-
-					debugger;
-
-					$('div.ui-footer').text(
-						body.width() +' :: '+ body.innerWidth()
-					);
-				});
-			});
