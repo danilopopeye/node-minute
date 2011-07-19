@@ -1,6 +1,4 @@
-li
-	p= play.text
-	span.time= play.time
+li= play.text
+	span.ui-li-count= play.time + "'"
 	- if( play.type !== 'default' )
-		span(class=[ 'action', play.type, teams[ play.team ].klass ].join(' ') )
-			img(src='/images/'+ play.type +'.png', alt='', title=play.type)
+		img(src='/images/'+ play.type +'.png', alt=play.type, class='ui-li-icon')

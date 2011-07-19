@@ -1,3 +1,24 @@
-- var left = 1 + ( play.time - 1 ) * 18
-- if( play.type !== 'default' )
-	img(src='/images/'+ play.type +'.png', class='line'+ teams[ play.team ].index, style='left:'+ left +'px;')
+- if( firstInCollection )
+	#timeline
+		.teams
+			#tTeam1= home
+			hr
+			#tTeam2= away
+		.container
+			- var left = collectionLength ? time * 18 : 0
+			hr#tLine(style='width:'+ left +'px')
+			table
+				thead
+					tr
+						- for( var i = 1; i < 51; i++ )
+							- if( i < 10 )
+								- i = '0' + i;
+							th #{i}
+
+- else if( lastInCollection )
+	br(clear='all')
+
+- else
+	- var left = 1 + ( play.time - 1 ) * 18
+	- if( play.type !== 'default' )
+		img(src='/images/'+ play.type +'.png', class='line'+ teams[ play.team ].index, style='left:'+ left +'px;')
