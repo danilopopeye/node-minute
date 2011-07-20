@@ -1,13 +1,12 @@
-tr
-	td.number= player.number
-	td= player.name
+- if( firstInCollection )
+	li(data-role='list-divider')= title
 
-	td
-		- if( player.goal > 0 )
-			img(src='/images/goal.png',title='Goal')
-
-	td
-		- if( player.cards.red )
-				img(src='/images/redcard.png',title='Red card')
-		- else if( player.cards.yellow > 0 )
-				img(src='/images/yellowcard.png',title='Yellow card')
+li= player.number +' '+ player.name
+	- if( player.goal > 0 || player.cards.red || player.cards.yellow > 0 )
+		span.ui-li-aside
+			- if( player.goal > 0 )
+				img(src='/images/goal.png',title='Goal')
+			- if( player.cards.red )
+					img(src='/images/redcard.png',title='Red card')
+			- else if( player.cards.yellow > 0 )
+					img(src='/images/yellowcard.png',title='Yellow card')

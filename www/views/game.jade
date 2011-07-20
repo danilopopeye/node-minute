@@ -1,38 +1,28 @@
 - var home = match.home, away = match.away;
-#main
-	#scoreboard
-		span#team1.name= home.name
-		span#team2.name= away.name
-		span.score
-			span#score1= home.score
-			| &nbsp;x
-			span#score2= away.score
-	.content
-		!= partial('rooster', { collection: match.teams, as: 'team' })
+- var plays = match.plays.concat(); plays.reverse();
 
-		#content-center
-			h3 Narration
-			.container
-				ul#narration
-					- var plays = match.plays.concat(); plays.reverse();
-					!= partial('partials/narration', { collection: plays, as: 'play', teams: teams })
-	#timeline
-		.teams
-			#tTeam1= home.acronym
-			hr
-			#tTeam2= away.acronym
-		.container
-			- var left = plays.length ? plays[0].time * 18 : 0
-			hr#tLine(style='width:'+ left +'px')
-			table
-				thead
-					tr
-						- for( var i = 1; i < 51; i++ )
-							- if( i < 10 )
-								- i = '0' + i;
-							th #{i}
+div(data-role='page')
+	div(data-role='header', data-position='fixed', data-theme='b')
+		a(href='/', data-icon='home', data-iconpos='notext', data-direction='reverse') Home
+		h1
+			span= home.name
+			span
+				span= home.score
+				| &nbsp;x
+				span= away.score
+			span= away.name
 
-			!= partial('partials/timeline', { collection: plays, as: 'play', teams: teams })
-		br(clear='all')
+	div(data-role='content')
+		.content-secondary
+			div(data-role='collapsible', data-collapsed='true')
+				h3 Information
 
-ul#notify
+				!= partial('rooster', { collection: match.teams, as: 'team' })
+
+		.content-primary
+			ul(data-role='listview', data-inset='true')
+				li(data-role='list-divider') Narration
+				!= partial('partials/narration', { collection: plays, as: 'play', teams: teams })
+
+	div(data-role='footer', data-position='fixed')
+		// != partial('partials/timeline', { collection: plays, as: 'play', time: match.time, home: home.acronym, away: away.acronym })

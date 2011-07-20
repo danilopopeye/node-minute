@@ -3,3 +3,5 @@ li
 		acronym(title=match.home.name)= match.home.acronym
 		|  #{match.home.score} x #{match.away.score}
 		acronym(title=match.away.name)= match.away.acronym
+		- if( match.active )
+			span.ui-li-count= match.time + "'"
