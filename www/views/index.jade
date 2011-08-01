@@ -7,11 +7,13 @@ div(data-role='page')
 			ul(data-role='listview', data-inset='true')
 				li
 					h3 Live games
+					span.ui-li-count= active.length
 					p Games being generated right now
 						ul(data-inset='true')
 							!= partial('partials/games_list.jade', { collection: active, as: 'match' })
 				li
 					h3 Archived games
+					span.ui-li-count= inactive.length
 					p For historical propouses
 						ul(data-inset='true')
 							!= partial('partials/games_list.jade', { collection: inactive, as: 'match' })
