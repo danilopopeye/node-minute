@@ -4,22 +4,23 @@
 div(data-role='page')
 	div(data-role='header', data-position='fixed', data-theme='b')
 		a(href='/', data-icon='home', data-iconpos='notext', data-direction='reverse') Home
-		h1
-			span= home.name
-			span(style='margin:0 5px;')
-				span= home.score
-				| &nbsp;x
-				span= away.score
-			span= away.name
+		h1= home.name +' x '+ away.name
 
 	div(data-role='content')
 		.content-secondary
 			div(data-role='collapsible', data-collapsed='true')
 				h3 Information
-
 				!= partial('rooster', { collection: match.teams, as: 'team' })
 
 		.content-primary
+			#scoreboard
+				.name= home.acronym
+				.score.ui-corner-all.ui-bar-b
+					span#home= home.score
+					span.divider -
+					span#away= away.score
+				.name= away.acronym
+
 			ul(data-role='listview', data-inset='true')
 				li(data-role='list-divider') Narration
 				!= partial('partials/narration', { collection: plays, as: 'play', teams: teams })
