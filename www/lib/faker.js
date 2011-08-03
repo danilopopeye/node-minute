@@ -5,7 +5,8 @@
 var
 	mongoose = require('mongoose'),
 	models = require('./models')(mongoose),
-	faker = require('Faker');
+	faker = require('Faker'),
+	REDIS = require('redis'), redis;
 
 /**
  * r
@@ -16,6 +17,20 @@ var
 
 function r(n){
 	return parseInt( Math.random() * ( n || 666 ), 10 );
+}
+
+/**
+ * getRedisClient
+ * returns a new redis connection
+ * @return {Object}
+ */
+
+function getRedisClient(){
+	var opt = process.env['redis'] || '6379:127.0.0.1';
+
+	opt = opt.split(':');
+
+	return REDIS.createClient.apply( REDIS, opt );
 }
 
 /**
@@ -255,12 +270,21 @@ Game.prototype.goal = function( play ){
  * Connect to mongodb
  */
 
-mongoose.connect( process.env['mongo'] || 'mongodb:////' );
+mongoose.connect( process.env['mongo'] || 'mongodb://localhost/minute' );
+
+/**
+ * Connect to redis
+ */
+
+redis = getRedisClient();
 
 /**
  * Initialize
  */
 
 mongoose.connection.on('open', function(){
-	new Game();
+	// this is sooooo ugly
+	redis.on('ready', function(){
+		new Game();
+	});
 });
