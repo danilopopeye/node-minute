@@ -80,6 +80,7 @@ Match.virtual('title').get(function(){
 
 module.exports = function(mg){
 	return {
+		_Play: Play,
 		Play: mg.model('plays', Play),
 		Player: mg.model('players', Player),
 		Team: mg.model('teams', Team),
