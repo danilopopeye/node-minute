@@ -51,7 +51,31 @@ function Game(){
 		// kick off
 		this.start.bind( this )
 	);
+
+	// mongo hook for redis
+	this.registerHooks();
 }
+
+/**
+ * Generate the redis key
+ */
+
+Game.prototype.key = function(){
+	var args = Array.prototype.slice.apply( arguments );
+	args.unshift( this.match._id );
+	return args.join(':');
+};
+
+/**
+ * Register the Mongoose hooks
+ */
+
+Game.prototype.registerHooks = function(){
+	var self = this;
+	models._Play.post('save', function(){
+		redis.publish( self.key( this.type ), JSON.stringify( this ) );
+	});
+};
 
 /**
  * Build the teams and roosters
@@ -283,8 +307,5 @@ redis = getRedisClient();
  */
 
 mongoose.connection.on('open', function(){
-	// this is sooooo ugly
-	redis.on('ready', function(){
-		new Game();
-	});
+	exports = new Game();
 });
