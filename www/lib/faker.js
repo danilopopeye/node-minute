@@ -294,7 +294,7 @@ Game.prototype.goal = function( play ){
  * Connect to mongodb
  */
 
-mongoose.connect( process.env['mongo'] || 'mongodb://localhost/minute' );
+mongoose.connect( process.env['mongo'] );
 
 /**
  * Connect to redis
@@ -307,5 +307,13 @@ redis = getRedisClient();
  */
 
 mongoose.connection.on('open', function(){
-	exports = new Game();
+	var game = new Game(), exit = game.finish.bind( game );
+
+	/**
+	 * Finalize the game if killed
+	 */
+
+	process.on('SIGTERM', exit);
+	process.on('SIGINT', exit);
+	process.on('uncaughtException', exit);
 });
