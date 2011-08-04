@@ -6,8 +6,10 @@
 
 * [Node.JS](http://nodejs.org/)
 * [Mongodb](http://www.mongodb.org/)
+* [Redis](http://redis.io/)
 * [Express](http://expressjs.com/)
 * [Mongoose](http://mongoosejs.com/)
+* [node_redis](https://github.com/mranney/node_redis/)
 * [Jade](http://jade-lang.com/)
 * [Stylus](http://learnboost.github.com/stylus/)
 * [Deploy](https://github.com/visionmedia/deploy/)
