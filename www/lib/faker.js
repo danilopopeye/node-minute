@@ -5,7 +5,8 @@
 var
 	mongoose = require('mongoose'),
 	models = require('./models')(mongoose),
-	faker = require('Faker');
+	faker = require('Faker'),
+	REDIS = require('redis'), redis;
 
 /**
  * r
@@ -16,6 +17,20 @@ var
 
 function r(n){
 	return parseInt( Math.random() * ( n || 666 ), 10 );
+}
+
+/**
+ * getRedisClient
+ * returns a new redis connection
+ * @return {Object}
+ */
+
+function getRedisClient(){
+	var opt = process.env['redis'] || '6379:127.0.0.1';
+
+	opt = opt.split(':');
+
+	return REDIS.createClient.apply( REDIS, opt );
 }
 
 /**
@@ -36,7 +51,31 @@ function Game(){
 		// kick off
 		this.start.bind( this )
 	);
+
+	// mongo hook for redis
+	this.registerHooks();
 }
+
+/**
+ * Generate the redis key
+ */
+
+Game.prototype.key = function(){
+	var args = Array.prototype.slice.apply( arguments );
+	args.unshift( this.match._id );
+	return args.join(':');
+};
+
+/**
+ * Register the Mongoose hooks
+ */
+
+Game.prototype.registerHooks = function(){
+	var self = this;
+	models._Play.post('save', function(){
+		redis.publish( self.key( this.type ), JSON.stringify( this ) );
+	});
+};
 
 /**
  * Build the teams and roosters
@@ -255,12 +294,26 @@ Game.prototype.goal = function( play ){
  * Connect to mongodb
  */
 
-mongoose.connect( process.env['mongo'] || 'mongodb:////' );
+mongoose.connect( process.env['mongo'] );
+
+/**
+ * Connect to redis
+ */
+
+redis = getRedisClient();
 
 /**
  * Initialize
  */
 
 mongoose.connection.on('open', function(){
-	new Game();
+	var game = new Game(), exit = game.finish.bind( game );
+
+	/**
+	 * Finalize the game if killed
+	 */
+
+	process.on('SIGTERM', exit);
+	process.on('SIGINT', exit);
+	process.on('uncaughtException', exit);
 });

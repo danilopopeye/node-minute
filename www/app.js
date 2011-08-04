@@ -13,7 +13,13 @@ var
  * Mongoose models
  */
 
-	M = require('./lib/models')(mongoose);
+	Models = require('./lib/models')(mongoose),
+
+/**
+ * Minute main app
+ */
+
+	Minute = require('./lib/minute');
 
 // Configuration
 
@@ -47,28 +53,7 @@ app.configure('production', function(){
 	console.log('Production configuration loaded');
 });
 
-app.configure('dotcloud', function(){
-	app.use(express.errorHandler());
-	app.set('mongo','mongodb://localhost/minute');
-	app.set('port', 8080);
-
-	console.log('DotCloud configuration loaded');
-});
-
 // Routes
-
-app.get('/', function(req, res){
-	// TODO: 2 find() or find() and map() ?
-	M.Match.find({ active: true }, function(err, actives){
-		M.Match.find({ active: false }, function(err, inactives){
-			res.render('index', {
-				title: 'Matches list', locals: {
-					active: actives, inactive: inactives
-				}
-			});
-		});
-	});
-});
 
 app.get('/new', function(req, res, next){
 	var
@@ -84,37 +69,9 @@ app.get('/new', function(req, res, next){
 
 	// first echo is the match id
 	faker.stdout.once('data',function(data){
+		// TODO: check if the data is really the match id
 		res.redirect( '/match/' + data.toString() );
 		clearTimeout( t );
-	});
-});
-
-app.param('matchId', function(req, res, next, id){
-	M.Match.findById(id, function(err, match){
-		if (err) return next(err);
-		if (!match) return next(new Error('failed to find match'));
-
-		// save the match model
-		req.match = match;
-
-		next();
-	});
-});
-
-app.get('/match/:matchId', function(req, res, next){
-	var match = req.match, teams = {};
-
-	teams[ match.home._id ] = {
-		klass: 'left', index: 1
-	};
-	teams[ match.away._id ] = {
-		klass: 'right', index: 2
-	};
-
-	res.render('game', {
-		title: match.title, locals: {
-			match: match, teams: teams
-		}
 	});
 });
 
@@ -125,8 +82,7 @@ app.get('/match/:matchId', function(req, res, next){
 mongoose.connect( app.set('mongo') );
 
 // Wait for connection before bind
-mongoose.connection.on('open',function(){
-	app.listen( app.set('port') );
-
+mongoose.connection.on('open', function(){
+	exports = new Minute( app, Models );
 	console.log("Express server listening on port %d", app.address().port);
 });
