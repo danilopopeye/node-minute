@@ -1,0 +1,6 @@
+{
+	'development': {
+		'mongo': 'mongodb://localhost/minute',
+		'redis': '6379:localhost'
+	}
+}
