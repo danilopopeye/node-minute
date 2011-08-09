@@ -3,6 +3,7 @@
  */
 
 var
+	config = require('./config'),
 	express = require('express'),
 	app = express.createServer(),
 	mongoose = require('mongoose'),
@@ -38,8 +39,8 @@ app.configure(function(){
 
 app.configure('development', function(){
 	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-	app.set('mongo','mongodb://localhost/minute');
-	app.set('port', 3000);
+	app.set('mongo', config.development.mongo);
+	app.set('port', config.development.port);
 
 	console.log('Development configuration loaded');
 });
