@@ -58,9 +58,9 @@ Game.prototype.key = function(){
  */
 
 Game.prototype.registerHooks = function(){
-	var self = this;
+	var id = this.match._id;
 	models._Play.post('save', function(){
-		redis.publish( self.key( this.type ), JSON.stringify( this ) );
+		redis.publish( id, JSON.stringify( this ) );
 	});
 };
 
