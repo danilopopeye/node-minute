@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -51,28 +50,6 @@ app.configure('production', function(){
 	app.set('port', 80);
 
 	console.log('Production configuration loaded');
-});
-
-// Routes
-
-app.get('/new', function(req, res, next){
-	var
-		// fork the game process
-		faker = spawn( process.execPath, [ __dirname + '/lib/faker.js' ], {
-			env: { mongo: app.set('mongo') || '' }
-		}),
-
-		// fallback timeout
-		t = setTimeout(function(res){
-			res.redirect('/');
-		}, 3000, res);
-
-	// first echo is the match id
-	faker.stdout.once('data',function(data){
-		// TODO: check if the data is really the match id
-		res.redirect( '/match/' + data.toString() );
-		clearTimeout( t );
-	});
 });
 
 /**
