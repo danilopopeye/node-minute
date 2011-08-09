@@ -1,4 +1,6 @@
-var fs = require('fs'), spawn = require('child_process').spawn;
+var
+	config = require('./config'),
+	spawn = require('child_process').spawn;
 
 function Games( n ){
 	var self = this;
@@ -22,7 +24,6 @@ function Games( n ){
 
 Games.prototype.__defineGetter__('env', function(){
 	if( !this._env ){
-		var config = fs.readFileSync('./config.json');
 		this._env = config[ process.env.NODE_ENV || 'development' ];
 	}
 
