@@ -1,7 +1,7 @@
 - var home = match.home, away = match.away;
 - var plays = match.plays.concat(); plays.reverse();
 
-div(data-role='page')
+div(data-role='page', class='match')
 	div(data-role='header', data-position='fixed', data-theme='b')
 		a(href='/', data-icon='home', data-iconpos='notext', data-direction='reverse') Home
 		h1= home.name +' x '+ away.name
@@ -21,7 +21,7 @@ div(data-role='page')
 					span#away= away.score
 				.name= away.acronym
 
-			ul(data-role='listview', data-inset='true')
+			ul(data-role='listview', data-inset='true', class='narration')
 				li(data-role='list-divider') Narration
 				!= partial('partials/narration', { collection: plays, as: 'play', teams: teams })
 

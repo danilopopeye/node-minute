@@ -1,4 +1,10 @@
 /**
+ * Module dependencies
+ */
+
+var socket_io = require('socket.io');
+
+/**
  * Minute
  * @constructor
  * @param {Object} express app
@@ -14,6 +20,13 @@ function Minute(app, models){
 
 	// main app routes
 	this.routes();
+
+	// bind socket.io to express
+	this._io = socket_io.listen( this.app );
+	this.io = this._io.sockets;
+
+	// socket binds
+	this.listeners();
 
 	// start the express app
 	app.listen( app.set('port') );
@@ -83,6 +96,18 @@ Minute.prototype.match = function match(req, res){
 		title: match.title, locals: {
 			match: match, teams: teams
 		}
+	});
+};
+
+/**
+ * Socket.io listeners
+ */
+
+Minute.prototype.listeners = function(){
+	this.io.on('connection', function(socket){
+		socket.emit('narration', {
+			text: socket.id
+		});
 	});
 };
 
