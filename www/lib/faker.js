@@ -68,6 +68,7 @@ Game.prototype.key = function(){
 Game.prototype.registerHooks = function(){
 	var id = this.id;
 	models._Play.post('save', function(){
+		console.log('hook:save', this);
 		redis.publish( id, JSON.stringify( this ) );
 	});
 };
@@ -130,7 +131,7 @@ Game.prototype.start = function( err ){
 
 	// time loop
 	this.timeout = setInterval(
-		this.tick.bind( this ), 1000
+		this.tick.bind( this ), 1000 * 3
 	);
 };
 

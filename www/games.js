@@ -40,7 +40,7 @@ Games.prototype.run = function( i ){
 	console.log( i + ':Game spawned' );
 
 	[ 'stdout', 'stderr' ].forEach(function( std ){
-		app[ std ].once('data', function( data ){
+		app[ std ].on('data', function( data ){
 			process[ std ].write( i +':'+ data.toString() );
 		});
 	});

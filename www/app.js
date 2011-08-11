@@ -26,7 +26,7 @@ var
 app.configure(function(){
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
-	app.use(express.logger());
+	// app.use(express.logger());
 	app.use(express.bodyParser());
 	app.use(express.favicon());
 	app.use(express.methodOverride());
@@ -62,5 +62,4 @@ mongoose.connect( app.set('mongo') );
 // Wait for connection before bind
 mongoose.connection.on('open', function(){
 	exports = new Minute( app, Models );
-	console.log("Express server listening on port %d", app.address().port);
 });

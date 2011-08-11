@@ -2,7 +2,10 @@
  * Module dependencies
  */
 
-var socket_io = require('socket.io');
+var
+	config = require('../config'),
+	socket_io = require('socket.io'),
+	redis = require('redis');
 
 /**
  * Minute
@@ -12,6 +15,12 @@ var socket_io = require('socket.io');
  */
 
 function Minute(app, models){
+	var self = this;
+
+	// socket.io namespaces
+	this.matches = {};
+
+	// external references
 	this.app = app;
 	this.models = models;
 
@@ -28,8 +37,21 @@ function Minute(app, models){
 	// socket binds
 	this.listeners();
 
-	// start the express app
-	app.listen( app.set('port') );
+	// connect to redis
+	this.redis = this.getRedis();
+
+	this.redis.on('ready', function(){
+		// redis PubSub subscriptions
+		self.subscribes();
+
+		// start the express app
+		app.listen( app.set('port') );
+
+		console.log(
+			"Express server listening on port %d in %s mode",
+				app.address().port, app.settings.env
+		);
+	});
 }
 
 /**
@@ -100,6 +122,18 @@ Minute.prototype.match = function match(req, res){
 };
 
 /**
+ * Redis conection
+ */
+
+Minute.prototype.getRedis = function(){
+	var conf = config[ this.app.settings.env ].redis;
+
+	return redis.createClient(
+		conf.port, conf.hostname
+	);
+};
+
+/**
  * Socket.io listeners
  */
 
@@ -109,6 +143,65 @@ Minute.prototype.listeners = function(){
 			text: socket.id
 		});
 	});
+};
+
+/**
+ * Redis PubSub subscriptions
+ */
+
+Minute.prototype.subscribes = function(){
+	var self = this;
+
+	this.redis.psubscribe('*');
+
+	this.redis.on('pmessage', function(pattern, match, message){
+		message = JSON.parse( message );
+		self.handlePubSub( match, message );
+	});
+};
+
+/**
+ * Redis PubSub handler
+ */
+
+Minute.prototype.handlePubSub = function( match, message ){
+	switch( message.type ){
+		case 'status':
+			this.status( match, message );
+		break;
+
+		case 'goal':
+		case 'default':
+		case 'redcard':
+		case 'yellowcard':
+			this.message( match, message );
+		break;
+	}
+};
+
+/**
+ * Match status
+ */
+
+Minute.prototype.status = function( match, message ){
+	return;
+	if( message.value === 'start' ){
+		// this.matches[ match ] = this._io.of( '/' + match );
+		this._io.of( '/' + match ).on('connection', function(socket){
+			console.log( 'join', socket.id, match );
+			socket.join( match );
+		});
+	} else {
+		delete this.matches[ match ];
+	}
+};
+
+/**
+ * Match messages
+ */
+
+Minute.prototype.message = function( match, message ){
+	this._io.of( '/' + match ).emit('narration', message);
 };
 
 // expose it
