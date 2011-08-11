@@ -44,12 +44,20 @@ function Game(){
 }
 
 /**
+ * Match id getter
+ */
+
+Game.prototype.__defineGetter__('id', function(){
+	return this.match._id;
+});
+
+/**
  * Generate the redis key
  */
 
 Game.prototype.key = function(){
 	var args = Array.prototype.slice.apply( arguments );
-	args.unshift( this.match._id );
+	args.unshift( this.id );
 	return args.join(':');
 };
 
@@ -58,7 +66,7 @@ Game.prototype.key = function(){
  */
 
 Game.prototype.registerHooks = function(){
-	var id = this.match._id;
+	var id = this.id;
 	models._Play.post('save', function(){
 		redis.publish( id, JSON.stringify( this ) );
 	});
@@ -115,7 +123,7 @@ Game.prototype.start = function( err ){
 	}
 
 	// log the game id
-	console.log( this.match._id );
+	console.log( this.id );
 
 	// first message
 	this.status('start');
@@ -220,6 +228,9 @@ Game.prototype.getPlayType = function(){
 
 Game.prototype.status = function(type){
 	console.log( type.toUpperCase(), 'The game has '+ type +'ed!' );
+	redis.publish( this.id, JSON.stringify({
+		type: 'status', value: type
+	}) );
 };
 
 /**
