@@ -139,9 +139,7 @@ Minute.prototype.getRedis = function(){
 
 Minute.prototype.listeners = function(){
 	this.io.on('connection', function(socket){
-		socket.emit('narration', {
-			text: socket.id
-		});
+		// nothing for now
 	});
 };
 
@@ -152,52 +150,33 @@ Minute.prototype.listeners = function(){
 Minute.prototype.subscribes = function(){
 	var self = this;
 
+	// register to all messages
 	this.redis.psubscribe('*');
 
+	// received a published message
 	this.redis.on('pmessage', function(pattern, match, message){
-		message = JSON.parse( message );
-		self.handlePubSub( match, message );
+		self.handlePubSub(
+			match, JSON.parse( message )
+		);
 	});
 };
 
 /**
- * Redis PubSub handler
+ * Redis PubSub message handler
  */
 
 Minute.prototype.handlePubSub = function( match, message ){
 	switch( message.type ){
-		case 'status':
-			this.status( match, message );
-		break;
-
 		case 'goal':
 		case 'default':
 		case 'redcard':
 		case 'yellowcard':
 			this.message( match, message );
-		break;
 	}
 };
 
 /**
- * Match status
- */
-
-Minute.prototype.status = function( match, message ){
-	return;
-	if( message.value === 'start' ){
-		// this.matches[ match ] = this._io.of( '/' + match );
-		this._io.of( '/' + match ).on('connection', function(socket){
-			console.log( 'join', socket.id, match );
-			socket.join( match );
-		});
-	} else {
-		delete this.matches[ match ];
-	}
-};
-
-/**
- * Match messages
+ * Match messages dispatch
  */
 
 Minute.prototype.message = function( match, message ){
