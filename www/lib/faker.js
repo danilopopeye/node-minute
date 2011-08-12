@@ -38,9 +38,6 @@ function Game(){
 		// kick off
 		this.start.bind( this )
 	);
-
-	// mongo hook for redis
-	this.registerHooks();
 }
 
 /**
@@ -59,18 +56,6 @@ Game.prototype.key = function(){
 	var args = Array.prototype.slice.apply( arguments );
 	args.unshift( this.id );
 	return args.join(':');
-};
-
-/**
- * Register the Mongoose hooks
- */
-
-Game.prototype.registerHooks = function(){
-	var id = this.id;
-	models._Play.post('save', function(){
-		console.log('hook:save', this);
-		redis.publish( id, JSON.stringify( this ) );
-	});
 };
 
 /**
@@ -166,7 +151,7 @@ Game.prototype.finish = function(){
  */
 
 Game.prototype.tick = function(){
-	var time = parseInt( this.match.time, 10 );
+	var self = this, time = parseInt( this.match.time, 10 );
 
 	// check the time and finish the game
 	if( time === ( 45 + r(5) ) || time === 50 ){
@@ -207,9 +192,11 @@ Game.prototype.tick = function(){
 
 	// save the match
 	this.match.save(function( err, match ){
-		console.log(
-			action.toUpperCase(), match.time, play.text
-		);
+		redis.publish( self.id, JSON.stringify( play ), function(){
+			console.log(
+				action.toUpperCase(), match.time, play.text
+			);
+		});
 	});
 };
 
