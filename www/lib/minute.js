@@ -73,8 +73,8 @@ Minute.prototype.routes = function(){
 		});
 	});
 
-	this.app.get('/', this.index);
-	this.app.get('/match/:matchId', this.match);
+	this.app.get('/', this.index.bind(this));
+	this.app.get('/match/:matchId', this.match.bind(this));
 };
 
 /**

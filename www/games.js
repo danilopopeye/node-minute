@@ -17,8 +17,6 @@ function Games( n ){
 			console.log( i + ':Game terminated' );
 			app.kill('SIGINT');
 		});
-
-		process.exit();
 	});
 }
 
