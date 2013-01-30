@@ -50,7 +50,7 @@ Games.prototype.run = function( i ){
 
 		// restart on next loop
 		process.nextTick(function(){
-			self.run( i );
+			// self.run( i );
 		});
 	});
 

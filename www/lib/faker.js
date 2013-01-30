@@ -7,6 +7,7 @@ var
 	models = require('./models')(mongoose),
 	faker = require('Faker'),
 	REDIS = require('redis'), redis,
+	data2xml = require('data2xml').data2xml,
 	env = process.env;
 
 /**
@@ -114,6 +115,14 @@ Game.prototype.start = function( err ){
 	// first message
 	this.status('start');
 
+console.log( require('util').inspect( this.match.teams[0].rooster, true, null ) );
+
+	var xml = data2xml('match', this.match);
+
+	console.log( 'XML', xml );
+
+	return;
+
 	// time loop
 	this.timeout = setInterval(
 		this.tick.bind( this ), 1000 * 3
@@ -132,6 +141,7 @@ Game.prototype.finish = function(){
 
 	// make inactive
 	this.match.active = false;
+	process.exit(0);
 
 	// save it
 	this.match.save(function(){
@@ -154,7 +164,7 @@ Game.prototype.tick = function(){
 	var self = this, time = parseInt( this.match.time, 10 );
 
 	// check the time and finish the game
-	if( time === ( 45 + r(5) ) || time === 50 ){
+	if( time === ( 1 + r(5) ) || time === 50 ){
 		return this.finish();
 	}
 
@@ -284,11 +294,14 @@ mongoose.connect( env.mongo );
 
 /**
  * Connect to redis
- */
 
 redis = REDIS.createClient(
 	env.redis.port, env.redis.hostname
 );
+ */
+redis = {
+	publish: function(a,b,c){ c && c(); }
+};
 
 /**
  * Initialize
