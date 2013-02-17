@@ -1,4 +1,3 @@
 node_modules
-logs/*
-pids/*
 public/stylesheets/*.css
+.env

@@ -1,5 +1,4 @@
 var
-	config = require('./config'),
 	spawn = require('child_process').spawn;
 
 function Games( n ){
@@ -29,10 +28,10 @@ Games.prototype.__defineGetter__('env', function(){
 });
 
 Games.prototype.run = function( i ){
-	var self = this, app = spawn(
-		process.execPath, [ __dirname + '/lib/faker.js' ], {
-			env: this.env
-		}
+	var app, self = this;
+
+  app = spawn(
+		process.execPath, [ __dirname + '/lib/faker.js' ]
 	);
 
 	console.log( i + ':Game spawned' );
